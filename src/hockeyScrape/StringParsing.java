@@ -1,6 +1,52 @@
 package hockeyScrape;
 
 public class StringParsing {
+	
+public static int numberOfWords(String input){
+	
+	boolean lastCharWasNotEmpty = true;
+	char[] charArray = input.toCharArray();
+	int numberOfWords = 0;
+	
+	for (char c: charArray){
+		//Hello, my name is jack
+		if (isSpace(c) == true && lastCharWasNotEmpty == true){
+			
+			numberOfWords++;
+			lastCharWasNotEmpty = false;
+			
+			System.out.print(numberOfWords);
+				
+			}
+		
+		if (isSpace(c) == false){
+			
+			System.out.print(c);
+			lastCharWasNotEmpty = true;
+
+		}
+	
+		}
+	
+	if (input.length() != 0){
+		numberOfWords++;
+	}
+		
+	
+	
+	
+	return numberOfWords;
+}
+	
+
+	
+
+	
+public static boolean isSpace(char c){
+	
+	return (int) c == 160 || (int) c == 32;
+	
+}
 
 public static String getNthWord(int n, String input){
 		
@@ -13,7 +59,7 @@ public static String getNthWord(int n, String input){
 		
 		while (counter < n && i < charArray.length){
 			
-			isSpace = (int) charArray[i] == 160 || (int) charArray[i] == 32;
+			isSpace = isSpace(charArray[i]);
 
 			if (counter == (n - 1) && isSpace == false){ 
 				
@@ -45,6 +91,7 @@ public static String getNthWord(int n, String input){
 		}
 		
 		return wordString;
+	
 	}
 	
 }

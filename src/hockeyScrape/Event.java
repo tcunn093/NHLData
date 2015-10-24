@@ -1,5 +1,8 @@
 package hockeyScrape;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Event {
 	
 	private int eventNumber;
@@ -9,6 +12,8 @@ public class Event {
 	private String periodTimeLeft;
 	private String event;
 	private String description;
+	private Map<Integer, Character> homePlayersOnIce;
+	private Map<Integer, Character> awayPlayersOnIce;
 	
 	public Event(){
 		
@@ -19,6 +24,20 @@ public class Event {
 		periodTimeLeft = "";
 		event = "";
 		description = "";
+		homePlayersOnIce = new HashMap<Integer, Character>();
+		awayPlayersOnIce = new HashMap<Integer, Character>();
+		
+	}
+	
+	public void addHomePlayerOnIce(int playerNumber, char position){
+		
+		homePlayersOnIce.put(playerNumber, position);
+		
+	}
+	
+	public void addAwayPlayerOnIce(int playerNumber, char position){
+		
+		awayPlayersOnIce.put(playerNumber, position);
 		
 	}
 	

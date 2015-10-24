@@ -7,11 +7,13 @@ public class Test {
 
 	public static void main(String[] args) throws IOException {
 		
-		GameData g = new GameData("http://www.nhl.com/scores/htmlreports/20152016/PL020001.HTM");
+		//GameData g = new GameData("http://www.nhl.com/scores/htmlreports/20152016/PL020001.HTM");
 		
-		Map<Integer, Event> eMap = g.getEventMap();
+		//Map<Integer, Event> eMap = g.getEventMap();
 		
-		System.out.print(eMap.get(327).getDescription());
+		//System.out.print(eMap.get(327).getDescription());
+		
+		System.out.println(StringParsing.numberOfWords("Hello, my name is Jack"));
 	}
 
 }

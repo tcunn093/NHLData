@@ -63,6 +63,7 @@ public class GameData {
 			break;
 		case 6:
 			
+			
 			break;
 		case 7:
 
@@ -108,7 +109,7 @@ public class GameData {
 			
 			for (Element d: data){
 				
-				//System.out.println(d.text());
+				System.out.println(d.text());
 				
 				if (counter%8 == 0 && counter != 0){
 					
