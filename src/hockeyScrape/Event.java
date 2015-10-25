@@ -29,15 +29,31 @@ public class Event {
 		
 	}
 	
-	public void addHomePlayerOnIce(int playerNumber, char position){
+	
+	
+	public void putHomePlayersOnIce(Map<Integer, Character> onIceMap){
 		
-		homePlayersOnIce.put(playerNumber, position);
+		homePlayersOnIce = onIceMap;
 		
 	}
 	
-	public void addAwayPlayerOnIce(int playerNumber, char position){
+	
+	
+	public void putAwayPlayersOnIce(Map<Integer, Character> onIceMap){
 		
-		awayPlayersOnIce.put(playerNumber, position);
+		awayPlayersOnIce = onIceMap;
+		
+	}
+	
+	public Map<Integer, Character> getHomePlayersOnIce(){
+		
+		return homePlayersOnIce;
+		
+	}
+	
+	public Map<Integer, Character> getAwayPlayersOnIce(){
+		
+		return awayPlayersOnIce;
 		
 	}
 	

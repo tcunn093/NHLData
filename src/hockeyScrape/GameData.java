@@ -32,6 +32,30 @@ public class GameData {
 	
 	private Document htmlReport;
 	
+public static Map<Integer, Character> addOnIcePlayers(String dataLine){
+		
+		int playerNumber;
+		char playerPosition;
+		
+		Map<Integer, Character> onIceMap = new HashMap<Integer, Character>();
+		
+		int numberOfPlayers = StringParsing.numberOfWords(dataLine) / 2;	
+		System.out.println("test");
+		for (int i = 1; i <= numberOfPlayers; i += 2){
+			System.out.println(StringParsing.getNthWord(i,dataLine));
+			//playerNumber = Integer.parseInt(StringParsing.getNthWord(i,dataLine));
+			playerPosition = StringParsing.getNthWord(i+1,dataLine).charAt(0);
+			System.out.println(playerPosition);
+			//onIceMap.put(playerNumber, playerPosition);
+			
+		}
+		
+		return onIceMap;
+			
+			
+		}
+
+	
 	
 	
 	public static Event addToEvent(Event e, String data, int counter){
@@ -62,11 +86,14 @@ public class GameData {
 			e.setDescription(data);
 			break;
 		case 6:
-			
-			
+			if (counter != 6){
+			e.putHomePlayersOnIce(addOnIcePlayers(data));
+			}
 			break;
 		case 7:
-
+			if (counter != 7){
+			e.putAwayPlayersOnIce(addOnIcePlayers(data));
+			}
 			break;
 		
 		}
