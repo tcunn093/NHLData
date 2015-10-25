@@ -4,6 +4,7 @@ public class StringParsing {
 	
 public static int numberOfWords(String input){
 	
+
 	boolean lastCharWasNotEmpty = true;
 	char[] charArray = input.toCharArray();
 	int numberOfWords = 0;
@@ -75,7 +76,7 @@ public static String getNthWord(int n, String input){
 			
 			i++;
 		}
-		
+		System.out.println("word: " + word);
 		return word;
 		
 	}
