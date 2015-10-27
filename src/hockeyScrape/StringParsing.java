@@ -74,7 +74,7 @@ public static String getNthWord(int n, String input){
 			
 			i++;
 		}
-		
+		System.out.println("word: " + word);
 		return word;
 		
 	}

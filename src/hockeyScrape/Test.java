@@ -10,7 +10,7 @@ public class Test {
 	public static void printMap(Map<Integer, Character> mapToPrint){
 		
 		for (Map.Entry<Integer, Character> entry: mapToPrint.entrySet()){
-			System.out.printf("%s: %s\n", entry.getKey(), entry.getValue());
+			System.out.printf("\n%s: %s\n", entry.getKey(), entry.getValue());
 		}
 		
 	}
@@ -23,7 +23,7 @@ public class Test {
 		
 		Map<Integer, Event> eMap = g.getEventMap();
 		
-		System.out.println("Number of Events: " + g.numberOfEvents());
+		System.out.print("Number of Events: " + g.numberOfEvents());
 		
 		printMap(eMap.get(326).getHomePlayersOnIce());
 		
