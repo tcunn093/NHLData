@@ -36,17 +36,21 @@ public static Map<Integer, Character> addOnIcePlayers(String dataLine){
 		
 		int playerNumber;
 		char playerPosition;
+		String stringPlayerNumber;
 		
 		Map<Integer, Character> onIceMap = new HashMap<Integer, Character>();
-		
+		//System.out.println("numwords: " + StringParsing.numberOfWords(dataLine));
 		int numberOfPlayers = StringParsing.numberOfWords(dataLine) / 2;	
-		System.out.println("test");
-		for (int i = 1; i <= numberOfPlayers; i += 2){
-			System.out.println(StringParsing.getNthWord(i,dataLine));
-			//playerNumber = Integer.parseInt(StringParsing.getNthWord(i,dataLine));
+		//System.out.println("test");
+		for (int i = 1; i <= 2*numberOfPlayers; i+=2){
+			
+			stringPlayerNumber = StringParsing.getNthWord(i,dataLine);
+			
+			//System.out.println("playernumber: " + stringPlayerNumber);
+			playerNumber = Integer.parseInt(stringPlayerNumber);
 			playerPosition = StringParsing.getNthWord(i+1,dataLine).charAt(0);
-			System.out.println(playerPosition);
-			//onIceMap.put(playerNumber, playerPosition);
+			//System.out.println(playerPosition);
+			onIceMap.put(playerNumber, playerPosition);
 			
 		}
 		
@@ -55,12 +59,18 @@ public static Map<Integer, Character> addOnIcePlayers(String dataLine){
 			
 		}
 
-	
+	public int numberOfEvents(){
+		
+		return eventMap.size();
+		
+		
+	}
 	
 	
 	public static Event addToEvent(Event e, String data, int counter){
 		
 		String newData;
+		int numWords;
 		
 		switch (counter%8){
 		
@@ -86,13 +96,17 @@ public static Map<Integer, Character> addOnIcePlayers(String dataLine){
 			e.setDescription(data);
 			break;
 		case 6:
-			if (counter != 6){
-			e.putHomePlayersOnIce(addOnIcePlayers(data));
+			numWords = StringParsing.numberOfWords(data);
+			//Each onIce data line will return at least 6 words (ie. Strings surrounded by spaces or min/max index). If it's less,
+			//then it's a non-standard line to be ignored.
+			if (counter != 6 && numWords >= 6){
+				e.putHomePlayersOnIce(addOnIcePlayers(data));
 			}
 			break;
 		case 7:
-			if (counter != 7){
-			e.putAwayPlayersOnIce(addOnIcePlayers(data));
+			numWords = StringParsing.numberOfWords(data);
+			if (counter != 7 && numWords >= 6){
+				e.putAwayPlayersOnIce(addOnIcePlayers(data));
 			}
 			break;
 		

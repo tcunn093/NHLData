@@ -7,10 +7,10 @@ import java.util.Map;
 public class Test {
 	
 	
-	public static <T> void printMap(Map<Integer, Character> mapToPrint){
+	public static void printMap(Map<Integer, Character> mapToPrint){
 		
 		for (Map.Entry<Integer, Character> entry: mapToPrint.entrySet()){
-			System.out.printf("%s: %s", entry.getKey(), entry.getValue());
+			System.out.printf("%s: %s\n", entry.getKey(), entry.getValue());
 		}
 		
 	}
@@ -23,9 +23,9 @@ public class Test {
 		
 		Map<Integer, Event> eMap = g.getEventMap();
 		
+		System.out.println("Number of Events: " + g.numberOfEvents());
 		
-		
-		printMap(eMap.get(324).getHomePlayersOnIce());
+		printMap(eMap.get(326).getHomePlayersOnIce());
 		
 		//System.out.println(StringParsing.numberOfWords("Hello, my name is Jack"));
 	}

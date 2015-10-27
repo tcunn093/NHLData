@@ -15,14 +15,12 @@ public static int numberOfWords(String input){
 			
 			numberOfWords++;
 			lastCharWasNotEmpty = false;
-			
-			System.out.print(numberOfWords);
+		
 				
 			}
 		
 		if (isSpace(c) == false){
 			
-			System.out.print(c);
 			lastCharWasNotEmpty = true;
 
 		}
@@ -68,7 +66,7 @@ public static String getNthWord(int n, String input){
 				
 			}
 			
-			if (isSpace == true){
+			if (isSpace == true && !isSpace(charArray[i-1])){
 				
 				counter++;
 				
@@ -76,7 +74,7 @@ public static String getNthWord(int n, String input){
 			
 			i++;
 		}
-		System.out.println("word: " + word);
+		
 		return word;
 		
 	}
