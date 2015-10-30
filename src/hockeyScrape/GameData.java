@@ -9,7 +9,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-
 public class GameData {
 	
 	private String homeTeam, awayTeam;
@@ -19,10 +18,11 @@ public class GameData {
 	private String arena;
 	private String startTime;
 	private String endTime;
-	private String gameNumber;
-	private String gameStatus;
+	private int gameNumber;
 	private String url;
 	private Map<Integer, Event> eventMap = new HashMap<Integer, Event>();
+	
+	private Document htmlReport;
 	
 	public Map<Integer, Event> getEventMap(){
 		
@@ -30,26 +30,87 @@ public class GameData {
 		
 	}
 	
-	private Document htmlReport;
+	public String getHomeTeam(){
+		
+		return homeTeam;
+		
+	}
 	
-public static Map<Integer, Character> addOnIcePlayers(String dataLine){
+	public String getAwayTeam(){
+		
+		return awayTeam;
+		
+	}
+	
+	public String getHomeGoals(){
+		
+		return homeGoals;
+		
+	}
+	
+	public String getAwayGoals(){
+		
+		return awayGoals;
+		
+	}
+	
+	public String getDate(){
+		
+		return date;
+	}
+	
+	public int getAttendance(){
+		
+		return attendance;
+	}
+	
+	public String getArena(){
+		
+		return arena;
+		
+	}
+	
+	public String getStartTime(){
+		
+		return startTime;
+		
+	}
+	
+	public String getEndTime(){
+		
+		return endTime;
+		
+	}
+	
+	public int getGameNumber(){
+		
+		return gameNumber;
+		
+	}
+	
+	
+	public String getUrl(){
+		
+		return url;
+	}
+	
+	private static Map<Integer, Character> onIcePlayers(String dataLine){
 		
 		int playerNumber;
 		char playerPosition;
 		String stringPlayerNumber;
 		
 		Map<Integer, Character> onIceMap = new HashMap<Integer, Character>();
-		//System.out.println("numwords: " + StringParsing.numberOfWords(dataLine));
+
 		int numberOfPlayers = StringParsing.numberOfWords(dataLine) / 2;	
-		//System.out.println("test");
+
 		for (int i = 1; i <= 2*numberOfPlayers; i+=2){
 			
 			stringPlayerNumber = StringParsing.getNthWord(i,dataLine);
 			
-			//System.out.println("playernumber: " + stringPlayerNumber);
 			playerNumber = Integer.parseInt(stringPlayerNumber);
 			playerPosition = StringParsing.getNthWord(i+1,dataLine).charAt(0);
-			//System.out.println(playerPosition);
+
 			onIceMap.put(playerNumber, playerPosition);
 			
 		}
@@ -75,44 +136,88 @@ public static Map<Integer, Character> addOnIcePlayers(String dataLine){
 		switch (counter%8){
 		
 		case 0:
+			
 			e.setEventNumber(Integer.parseInt(data));
+			
 			break;
+			
 		case 1:
+			
 			e.setPeriod(Integer.parseInt(data));
+			
 			break;
+			
 		case 2: 
+			
 			e.setStrength(data);
+			
 			break;
+			
 		case 3:
+			
 			newData = StringParsing.getNthWord(1, data);
 			e.setPeriodTime(newData);
+			
 			newData = StringParsing.getNthWord(2, data);
 			e.setPeriodTimeLeft(data);
+			
 			break;
+			
 		case 4:
+			
 			e.setEvent(data);
+			
 			break;
+			
 		case 5:
+			
 			e.setDescription(data);
+			
 			break;
+			
 		case 6:
+			
 			numWords = StringParsing.numberOfWords(data);
 			//Each onIce data line will return at least 6 words (ie. Strings surrounded by spaces or min/max index). If it's less,
 			//then it's a non-standard line to be ignored.
 			if (counter != 6 && numWords >= 6){
-				e.putHomePlayersOnIce(addOnIcePlayers(data));
+				
+				e.putHomePlayersOnIce(onIcePlayers(data));
+				
 			}
+			
 			break;
+			
 		case 7:
+			
 			numWords = StringParsing.numberOfWords(data);
+			
 			if (counter != 7 && numWords >= 6){
-				e.putAwayPlayersOnIce(addOnIcePlayers(data));
+				
+				e.putAwayPlayersOnIce(onIcePlayers(data));
 			}
+			
 			break;
 		
 		}
 		
 		return e;
+		
+	}
+	
+	private void awayInfo(String dataLine){
+		
+		String awayPartial = StringParsing.getNthWord(-6, dataLine);
+		awayTeam = Teams.getFullTeamName(awayPartial);
+		awayGoals = StringParsing.getNthWord(2, dataLine);
+		
+	}
+	
+	private void homeInfo(String dataLine){
+		
+		String homePartial = StringParsing.getNthWord(-6, dataLine);
+		homeTeam = Teams.getFullTeamName(homePartial);
+		homeGoals = StringParsing.getNthWord(2, dataLine);
 		
 	}
 	
@@ -125,6 +230,14 @@ public static Map<Integer, Character> addOnIcePlayers(String dataLine){
 		this.url = url;
 		
 		htmlReport = Jsoup.connect(url).maxBodySize(0).get();
+		
+		String awayInfoLine = htmlReport.select("table[id=Visitor]").first().text();
+		awayInfo(awayInfoLine);
+		
+		gameNumber = Integer.parseInt(StringParsing.getNthWord(-1, awayInfoLine));
+		
+		String homeInfoLine = htmlReport.select("table[id=Home]").first().text();
+		homeInfo(homeInfoLine);
 		
 		Elements gameInfo = htmlReport.select("table[id=GameInfo]").select("tr");
 		
@@ -150,8 +263,6 @@ public static Map<Integer, Character> addOnIcePlayers(String dataLine){
 			
 			for (Element d: data){
 				
-				System.out.println(d.text());
-				
 				if (counter%8 == 0 && counter != 0){
 					
 					eventMap.put((counter)/8, event);
@@ -167,9 +278,7 @@ public static Map<Integer, Character> addOnIcePlayers(String dataLine){
 				
 			}
 			
-			eventMap.put((counter)/8, event);
-			
-			
+			eventMap.put((counter)/8, event);	
 			
 		}
 		

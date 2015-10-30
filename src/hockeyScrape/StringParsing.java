@@ -4,13 +4,12 @@ public class StringParsing {
 	
 public static int numberOfWords(String input){
 	
-
 	boolean lastCharWasNotEmpty = true;
 	char[] charArray = input.toCharArray();
 	int numberOfWords = 0;
 	
 	for (char c: charArray){
-		//Hello, my name is jack
+
 		if (isSpace(c) == true && lastCharWasNotEmpty == true){
 			
 			numberOfWords++;
@@ -47,34 +46,65 @@ public static boolean isSpace(char c){
 	
 }
 
+
 public static String getNthWord(int n, String input){
 		
-		int counter = 0, i = 0;
+		int counter = 0;
+		
+		int i = 0;
 		
 		char[] charArray = input.toCharArray();
 		
 		String word = "";
 		boolean isSpace;
 		
-		while (counter < n && i < charArray.length){
-			
-			isSpace = isSpace(charArray[i]);
+		
+	    if (n >= 0){
+	    	
+			while (counter < n && i < charArray.length){
+				
+				isSpace = isSpace(charArray[i]);
+	
+				if (counter == (n - 1) && isSpace == false){ 
+					
+					word += charArray[i];
+					
+				}
+				
+				if (isSpace == true && !isSpace(charArray[i-1])){
+					
+					counter++;
+					
+				}
+				
+				i++;
+			}
+	    } else {
+	    	
+	    	n *= -1;
+	    	
+	    	while (counter >= 0 && i < charArray.length){
+	    		
+				isSpace = isSpace(charArray[charArray.length - (i+1)]);
+	
+				if (counter == (n - 1) && isSpace == false){ 
+					
+					word = charArray[charArray.length - (i+1)] + word;
+					
+				}
+				
+				if (isSpace == true && !isSpace(charArray[charArray.length - (i + 2)])){
+					
+					counter++;
+					
+				}
+				
+				i++;
+			}
+	    	
+	    	
+	    }
 
-			if (counter == (n - 1) && isSpace == false){ 
-				
-				word += charArray[i];
-				
-			}
-			
-			if (isSpace == true && !isSpace(charArray[i-1])){
-				
-				counter++;
-				
-			}
-			
-			i++;
-		}
-		System.out.println("word: " + word);
 		return word;
 		
 	}
@@ -86,6 +116,10 @@ public static String getNthWord(int n, String input){
 		for(int i = startWordNumber; i <=endWordNumber; i++){
 			
 			wordString += getNthWord(i, input);
+			
+				if (i != endWordNumber){
+					wordString += " ";
+				}
 			
 		}
 		
