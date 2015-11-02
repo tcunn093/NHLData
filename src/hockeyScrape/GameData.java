@@ -13,6 +13,7 @@ public class GameData {
 	
 	private String homeTeam, awayTeam;
 	private String homeGoals, awayGoals;
+	private String awayInfoLine, homeInfoLine;
 	private String date;
 	private int attendance;
 	private String arena;
@@ -20,8 +21,8 @@ public class GameData {
 	private String endTime;
 	private int gameNumber;
 	private String url;
+	private Elements gameInfo;
 	private Map<Integer, Event> eventMap = new HashMap<Integer, Event>();
-	
 	private Document htmlReport;
 	
 	public Map<Integer, Event> getEventMap(){
@@ -127,8 +128,7 @@ public class GameData {
 		
 	}
 	
-	
-	public static Event addToEvent(Event e, String data, int counter){
+	private static Event addToEvent(Event e, String data, int counter){
 		
 		String newData;
 		int numWords;
@@ -182,7 +182,7 @@ public class GameData {
 			//then it's a non-standard line to be ignored.
 			if (counter != 6 && numWords >= 6){
 				
-				e.putHomePlayersOnIce(onIcePlayers(data));
+				e.putAwayPlayersOnIce(onIcePlayers(data));
 				
 			}
 			
@@ -194,7 +194,7 @@ public class GameData {
 			
 			if (counter != 7 && numWords >= 6){
 				
-				e.putAwayPlayersOnIce(onIcePlayers(data));
+				e.putHomePlayersOnIce(onIcePlayers(data));
 			}
 			
 			break;
@@ -205,56 +205,97 @@ public class GameData {
 		
 	}
 	
-	private void awayInfo(String dataLine){
+	private void setAwayGoals(){
+
+		awayGoals = StringParsing.getNthWord(2, awayInfoLine);
 		
-		String awayPartial = StringParsing.getNthWord(-6, dataLine);
+	}
+	
+	private void setAwayTeam(){
+		
+		String awayPartial = StringParsing.getNthWord(-6, awayInfoLine);
 		awayTeam = Teams.getFullTeamName(awayPartial);
-		awayGoals = StringParsing.getNthWord(2, dataLine);
 		
 	}
 	
-	private void homeInfo(String dataLine){
+	private void setHomeTeam(){
 		
-		String homePartial = StringParsing.getNthWord(-6, dataLine);
+		String homePartial = StringParsing.getNthWord(-6, homeInfoLine);
 		homeTeam = Teams.getFullTeamName(homePartial);
-		homeGoals = StringParsing.getNthWord(2, dataLine);
+		
+	}
+
+	private void setHomeGoals(){
+		
+		homeGoals = StringParsing.getNthWord(2, homeInfoLine);
 		
 	}
 	
-	public GameData(String url) throws IOException{
-		
-		Event event = new Event();
-		
-		int counter = 0;
-		
-		this.url = url;
-		
-		htmlReport = Jsoup.connect(url).maxBodySize(0).get();
-		
-		String awayInfoLine = htmlReport.select("table[id=Visitor]").first().text();
-		awayInfo(awayInfoLine);
+	private void setGameNumber(){
 		
 		gameNumber = Integer.parseInt(StringParsing.getNthWord(-1, awayInfoLine));
 		
-		String homeInfoLine = htmlReport.select("table[id=Home]").first().text();
-		homeInfo(homeInfoLine);
+	}
+	
+	private void setAwayInfoLine(){
 		
-		Elements gameInfo = htmlReport.select("table[id=GameInfo]").select("tr");
+		awayInfoLine =  htmlReport.select("table[id=Visitor]").first().text();
+		
+	}
+	
+	private void setHomeInfoLine(){
+		
+		homeInfoLine =  htmlReport.select("table[id=Home]").first().text();
+	}
+	
+	private void setHTMLDocument() throws IOException{
+		
+		htmlReport = Jsoup.connect(url).maxBodySize(0).get();
+		
+	}
+	
+	private void setGameInfo(){
+		
+		gameInfo = htmlReport.select("table[id=GameInfo]").select("tr");
+		
+	}
+	
+	private void setArena(){
 		
 		String rawArena = gameInfo.get(4).text();
-
-		String rawTime = gameInfo.get(5).text();
+		arena = StringParsing.getNWords(4,6, rawArena);
+		
+	}
+	
+	private void setAttendance(){
+		
+		String rawAttendance = gameInfo.get(4).text();
+		attendance = Integer.parseInt(StringParsing.getNthWord(2, rawAttendance).replace(",", ""));
+		
+	}
+	
+	private void setDate(){
 		
 		date = gameInfo.get(3).text();
 		
-		attendance = Integer.parseInt(StringParsing.getNthWord(2, rawArena).replace(",", ""));
-		
-		arena = StringParsing.getNWords(4,6, rawArena);
+	}
 	
+	private void setStartEndTimes(){
+		
+		String rawTime = gameInfo.get(5).text();
+		
 		startTime = StringParsing.getNthWord(2, rawTime);
 	
 		endTime = StringParsing.getNthWord(5, rawTime);
 		
+	}
+	
+	private void setEvents(){
+		
+		Event event = new Event();
+		
+		int counter = 0;
+
 		Elements dataLines = htmlReport.select("tr[class$=evenColor]");
 		
 		for (Element e: dataLines){
@@ -283,7 +324,40 @@ public class GameData {
 		}
 		
 		
+	}
 	
+	public GameData(String url) throws IOException{
+		
+		this.url = url;
+		
+		setHTMLDocument();//Must execute before all other methods.
+		
+		//----------------
+		
+		setAwayInfoLine();//Must execute before all other methods up to line below.
+		setHomeInfoLine();//Must execute before all other methods up to line below.
+		
+		setGameNumber();
+		
+		setHomeTeam();
+		setHomeGoals();
+		
+		setAwayTeam();
+		setAwayGoals();
+		
+		//----------------
+
+		setGameInfo();//Must execute before all other methods up to line below.
+		
+		setArena();
+		setAttendance();
+		setStartEndTimes();
+		setDate();
+		
+		//----------------
+		
+		setEvents();
+		
 	}
 	
 

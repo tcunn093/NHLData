@@ -29,15 +29,11 @@ public class Event {
 		
 	}
 	
-	
-	
 	public void putHomePlayersOnIce(Map<Integer, Character> onIceMap){
 		
 		homePlayersOnIce = onIceMap;
 		
 	}
-	
-	
 	
 	public void putAwayPlayersOnIce(Map<Integer, Character> onIceMap){
 		
@@ -140,7 +136,5 @@ public class Event {
 		return description;
 		
 	}
-	
-	
 
 }
