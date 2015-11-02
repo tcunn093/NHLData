@@ -89,7 +89,6 @@ public class GameData {
 		
 	}
 	
-	
 	public String getUrl(){
 		
 		return url;
@@ -233,7 +232,8 @@ public class GameData {
 	
 	private void setGameNumber(){
 		
-		gameNumber = Integer.parseInt(StringParsing.getNthWord(-1, awayInfoLine));
+		String rawGameNumber = gameInfo.get(6).text();
+		gameNumber = Integer.parseInt(StringParsing.getNthWord(-1, rawGameNumber));
 		
 	}
 	
@@ -336,9 +336,7 @@ public class GameData {
 		
 		setAwayInfoLine();//Must execute before all other methods up to line below.
 		setHomeInfoLine();//Must execute before all other methods up to line below.
-		
-		setGameNumber();
-		
+				
 		setHomeTeam();
 		setHomeGoals();
 		
@@ -353,6 +351,7 @@ public class GameData {
 		setAttendance();
 		setStartEndTimes();
 		setDate();
+		setGameNumber();
 		
 		//----------------
 		

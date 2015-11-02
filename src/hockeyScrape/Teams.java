@@ -2,7 +2,7 @@ package hockeyScrape;
 
 public class Teams {
 	
-	private static final String[] teams = {"TORONTO MAPLE LEAFS",
+	public static final String[] teamList = {"TORONTO MAPLE LEAFS",
 										  "MONTREAL CANADIENS",
 										  "LOS ANGELES KINGS",
 										  "MINNESOTA WILD",
@@ -38,7 +38,7 @@ public class Teams {
 		
 		String fullTeamName = "";
 		
-		for (String team: teams){
+		for (String team: teamList){
 			
 			if (team.contains(partialString)){
 				fullTeamName = team;
@@ -50,8 +50,7 @@ public class Teams {
 		return fullTeamName;
 				
 	}
-										  
-										  
+										  									  
 }
 
 
