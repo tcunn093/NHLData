@@ -17,7 +17,8 @@ public class Test {
 				+ "\nArena: %s"
 				+ "\nStart Time: %s"
 				+ "\nEnd Time: %s"
-				+ "\nAttendance: %d\n", g.getGameNumber(),
+				+ "\nAttendance: %d"
+				+ "\nURL: %s\n", 		  g.getGameNumber(),
 									  g.getHomeTeam(),
 									  g.getHomeGoals(),
 									  g.getAwayTeam(),
@@ -26,7 +27,9 @@ public class Test {
 									  g.getArena(),
 									  g.getStartTime(),
 									  g.getEndTime(),
-									  g.getAttendance()); 
+									  g.getAttendance(),
+									  g.getUrl()); 
+										
 				
 								
 				
@@ -57,15 +60,17 @@ public static void printGMap(Map<Integer, Event> mapToPrint){
 		
 		//GameData g = new GameData("http://www.nhl.com/scores/htmlreports/20152016/PL020050.HTM");
 		
-		SeasonData s = new SeasonData("20152016");
+		NHLData n = new NHLData();
 		
-		Map<Integer, GameData> sMap = s.getSeasonMap();
+		Map<String, SeasonData> NMap = n.getNHLMap();
 		
 		//System.out.println("Number of Events: " + g.numberOfEvents());
 		
 		//printGameData(g);
 
-		System.out.println(sMap.size());
+		System.out.println(NMap.size());
+		
+		
 		
 		double endTime = System.currentTimeMillis();
 

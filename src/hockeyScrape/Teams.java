@@ -31,7 +31,8 @@ public class Teams {
 										  "PHILADELPHIA FLYERS",
 										  "DETROIT RED WINGS",
 										  "TAMPA BAY LIGHTNING",
-										  "WASHINGTON CAPITALS"
+										  "WASHINGTON CAPITALS",
+										  "ATLANTA THRASHERS"
 										  };
 	
 	public static String getFullTeamName(String partialString){

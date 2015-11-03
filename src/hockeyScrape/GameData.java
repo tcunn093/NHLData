@@ -286,7 +286,7 @@ public class GameData {
 		
 		startTime = StringParsing.getNthWord(2, rawTime);
 	
-		endTime = StringParsing.getNthWord(5, rawTime);
+		endTime = StringParsing.getNthWord(6, rawTime);
 		
 	}
 	

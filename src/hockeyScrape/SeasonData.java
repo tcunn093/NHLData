@@ -6,25 +6,26 @@ import java.util.Map;
 
 public class SeasonData {
 	
-	private String currentSeason;
+	private String season;
 	private Map<Integer, GameData> seasonMap = new HashMap<Integer, GameData>();
 	
-	private String getURL(String season, int gameNumber){
+	public static String getURL(String season, int gameNumber){
 		
 		return "http://www.nhl.com/scores/htmlreports/" + season + "/PL0" + Integer.toString(gameNumber) + ".HTM";
 		
 	}
 	
+	
 	private void setGames() throws IOException{
 		
 		int badURLCounter = 3;
 		int gameNumber = 20001;
-		String url = getURL(currentSeason, gameNumber);
-
+		String url = getURL(season, gameNumber);
+		
 		GameData game;
 		
 		while (badURLCounter > 0){
-					
+			System.out.println("Bad URL Counter: " + badURLCounter);
 			try{
 				
 			game = new GameData(url);
@@ -32,6 +33,8 @@ public class SeasonData {
 			} catch (Exception e){
 				
 				badURLCounter--;
+				gameNumber++;
+				url = getURL(season, gameNumber);
 				continue;
 				
 			}
@@ -41,7 +44,7 @@ public class SeasonData {
 			
 			gameNumber++;
 			
-			url = getURL(currentSeason, gameNumber);
+			url = getURL(season, gameNumber);
 			
 			badURLCounter = 3;
 			
@@ -60,9 +63,9 @@ public class SeasonData {
 		
 	}
 
-	public SeasonData(String currentSeason) throws IOException {
+	public SeasonData(String season) throws IOException {
 		
-		this.currentSeason = currentSeason;
+		this.season = season;
 		
 		setGames();
 		
@@ -70,8 +73,14 @@ public class SeasonData {
 	
 	public Map<Integer, GameData> getSeasonMap(){
 		
-		
 		return seasonMap;
+	}
+	
+	public String getSeason(){
+		
+	return season;	
+		
+	
 	}
 
 }
