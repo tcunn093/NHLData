@@ -19,7 +19,7 @@ public class Teams {
 										  "EDMONTON OILERS",
 										  "NEW YORK ISLANDERS",
 										  "NEW YORK RANGERS",
-										  "NEw JERSEY DEVILS",
+										  "NEW JERSEY DEVILS",
 										  "FLORIDA PANTHERS",
 										  "CAROLINA HURRICANES",
 										  "OTTAWA SENATORS",
@@ -47,7 +47,6 @@ public class Teams {
 			
 		}
 				
-			
 		return fullTeamName;
 				
 	}

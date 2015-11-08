@@ -1,6 +1,7 @@
 package hockeyScrape;
 
 import java.io.IOException;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +10,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class GameData {
+public class Game {
 	
 	private String homeTeam, awayTeam;
 	private String homeGoals, awayGoals;
@@ -22,8 +23,15 @@ public class GameData {
 	private int gameNumber;
 	private String url;
 	private Elements gameInfo;
-	private Map<Integer, Event> eventMap = new HashMap<Integer, Event>();
+	private Map<Integer, Event> eventMap;
 	private Document htmlReport;
+	private Event event;
+	
+	public static String generateURL(String season, int gameNumber){
+		
+		return "http://www.nhl.com/scores/htmlreports/" + season + "/PL0" + Integer.toString(gameNumber) + ".HTM";
+		
+	}
 	
 	public Map<Integer, Event> getEventMap(){
 		
@@ -93,6 +101,7 @@ public class GameData {
 		
 		return url;
 	}
+	
 	
 	private static Map<Integer, Character> onIcePlayers(String dataLine){
 		
@@ -286,13 +295,13 @@ public class GameData {
 		
 		startTime = StringParsing.getNthWord(2, rawTime);
 	
-		endTime = StringParsing.getNthWord(6, rawTime);
+		endTime = StringParsing.getNthWord(-2, rawTime);
 		
 	}
 	
 	private void setEvents(){
 		
-		Event event = new Event();
+		event = new Event();
 		
 		int counter = 0;
 
@@ -307,9 +316,6 @@ public class GameData {
 				if (counter%8 == 0 && counter != 0){
 					
 					eventMap.put((counter)/8, event);
-					
-					event = null;
-					event = new Event();
 					
 				}
 				
@@ -326,9 +332,10 @@ public class GameData {
 		
 	}
 	
-	public GameData(String url) throws IOException{
+	public Game(String url) throws IOException{
 		
 		this.url = url;
+		eventMap = new HashMap<Integer, Event>();
 		
 		setHTMLDocument();//Must execute before all other methods.
 		

@@ -31,8 +31,6 @@ package hockeyScrape;
 		}
 			
 		
-		
-		
 		return numberOfWords;
 	}
 	
