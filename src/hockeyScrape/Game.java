@@ -17,7 +17,7 @@ public class Game {
 	private String awayInfoLine, homeInfoLine;
 	private String date;
 	private int attendance;
-	private String arena;
+	//private String arena;
 	private String startTime;
 	private String endTime;
 	private int gameNumber;
@@ -26,6 +26,8 @@ public class Game {
 	private Map<Integer, Event> eventMap;
 	private Document htmlReport;
 	private Event event;
+	
+	
 	
 	public static String generateURL(String season, int gameNumber){
 		
@@ -73,11 +75,13 @@ public class Game {
 		return attendance;
 	}
 	
+	/**
 	public String getArena(){
 		
 		return arena;
 		
 	}
+	**/
 	
 	public String getStartTime(){
 		
@@ -268,13 +272,14 @@ public class Game {
 		gameInfo = htmlReport.select("table[id=GameInfo]").select("tr");
 		
 	}
-	
+	/**
 	private void setArena(){
 		
 		String rawArena = gameInfo.get(4).text();
 		arena = StringParsing.getNWords(4,6, rawArena);
 		
 	}
+	**/
 	
 	private void setAttendance(){
 		
@@ -354,7 +359,7 @@ public class Game {
 
 		setGameInfo();//Must execute before all other methods up to line below.
 		
-		setArena();
+		//setArena();
 		setAttendance();
 		setStartEndTimes();
 		setDate();

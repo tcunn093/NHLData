@@ -15,6 +15,7 @@ public class Event {
 	private Map<Integer, Character> homePlayersOnIce;
 	private Map<Integer, Character> awayPlayersOnIce;
 	
+	
 	public Event(){
 		
 		eventNumber = 0;

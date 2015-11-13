@@ -1,47 +1,66 @@
 package hockeyScrape;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Teams {
 	
-	public static final String[] teamList = {"TORONTO MAPLE LEAFS",
-										  "MONTREAL CANADIENS",
-										  "LOS ANGELES KINGS",
-										  "MINNESOTA WILD",
-										  "COLUMBUS BLUE JACKETS",
-										  "BUFFALO SABRES",
-										  "SAN JOSE SHARKS",
-										  "ANAHEIM DUCKS",
-										  "VANCOUVER CANUCKS",
-										  "CALGARY FLAMES",
-										  "COLORADO AVALANCHE",
-										  "ARIZONA COYOTES",
-										  "DALLAS STARS",
-										  "WINNIPEG JETS",
-										  "EDMONTON OILERS",
-										  "NEW YORK ISLANDERS",
-										  "NEW YORK RANGERS",
-										  "NEW JERSEY DEVILS",
-										  "FLORIDA PANTHERS",
-										  "CAROLINA HURRICANES",
-										  "OTTAWA SENATORS",
-										  "BOSTON BRUINS",
-										  "CHICAGO BLACKHAWKS",
-										  "NASHVILLE PREDATORS",
-										  "ST.LOUIS BLUES",
-										  "PITTSBURGH PENGUINS",
-										  "PHILADELPHIA FLYERS",
-										  "DETROIT RED WINGS",
-										  "TAMPA BAY LIGHTNING",
-										  "WASHINGTON CAPITALS",
-										  "ATLANTA THRASHERS"
+   public static String[] teamList = {"Toronto Maple Leafs",
+											"Tampa Bay Lightning",
+											"Dallas Stars",
+											"Florida Panthers",
+											"New York Islanders",
+											"Montreal Canadiens",
+											"Nashville Predators",
+											"Ottawa Senators",
+											"Pittsburgh Penguins",
+											"Buffalo Sabres",
+											"Arizona Coyotes",
+											"Anaheim Ducks",
+											"Detroit Red Wings",
+											"New York Rangers",
+											"Winnipeg Jets",
+											"Columbus Blue Jackets",
+											"Colorado Avalanche",
+											"Carolina Hurricanes",
+											"New Jersey Devils",
+											"Edmonton Oilers",
+											"Vancouver Canucks",
+											"Calgary Flames",
+											"San Jose Sharks",
+											"St.Louis Blues",
+											"Los Angeles Kings",
+											"Boston Bruins",
+											"Chicago Blackhawks",
+											"Washington Capitals",
+											"Philadelphia Flyers",
+											"Minnesota Wild"
 										  };
+	
+	
+	public static Map<String, Integer> teamMap = new HashMap<String, Integer>();
+	
+	static{
+		
+		for (int i = 1; i <= teamList.length; i++){
+			
+			teamMap.put(teamList[i-1], i);
+			
+		}
+		
+		
+	}
 	
 	public static String getFullTeamName(String partialString){
 		
 		String fullTeamName = "";
+		String teamUpper;
 		
 		for (String team: teamList){
 			
-			if (team.contains(partialString)){
+			teamUpper = team.toUpperCase();
+			
+			if (teamUpper.contains(partialString.toUpperCase())){
 				fullTeamName = team;
 			};
 			

@@ -2,21 +2,35 @@ package hockeyScrape;
 
 import javasql.SQLDatabase;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class HockeyJDBC {
 	
 	private static final int badURLLimit = 3;
 	private static final int initialGameNumber = 20001;
+	private static List<String> eventSqlStatements;
+	private static List<String> gameSqlStatements;
+	private static List<String> sqlStatements;
 
 	public HockeyJDBC() throws SQLException {
 		
 		SQLDatabase.setSchema("hockey");
 		SQLDatabase.connect();
+		
+		sqlStatements = new ArrayList<String>();
+		
+		eventSqlStatements = new ArrayList<String>();
+
+		gameSqlStatements = new ArrayList<String>();
 		
 	}
 	
@@ -38,7 +52,8 @@ public class HockeyJDBC {
 
 			game = new Game(url);
 			
-			HockeyJDBC.addGamesToTable(game);
+			addGamesToTable(game);
+			//addToTeamsTable(game);
 			
 			} catch (IOException e){
 				
@@ -89,6 +104,25 @@ public class HockeyJDBC {
 		
 	}
 	
+	
+	public void printStatements() throws FileNotFoundException{
+		
+		System.out.println();
+		
+		PrintWriter out = new PrintWriter("C:\\Users\\Thomas\\Workspace\\hockeyScrape\\SQL.txt");
+		
+		sqlStatements.addAll(gameSqlStatements);
+		sqlStatements.addAll(eventSqlStatements);
+		
+		
+		for (String sql: sqlStatements){
+			
+			out.println(sql);
+			
+		}
+		
+	}
+	
 	public static String formatTime(String t){
 		
 		
@@ -115,28 +149,33 @@ public class HockeyJDBC {
 		SQLDatabase.disconnect();
 		
 	}
-	
+	/**
 	public void addToTeamsTable(Game g) throws SQLException{
 		
-		String arena = g.getArena();
+		//String arena = g.getArena();
 		String teamName = g.getHomeTeam();
 		
-		String sql = "REPLACE INTO Teams_T(Team_Name, Team_Arena)" + "VALUES ('" + teamName + "', '" + arena + "');";
+		String sql = "REPLACE INTO Team_T(Team_Name)" + "VALUES ('" + teamName + "');";
 		
+		String insert = "INSERT INTO Team_T(Team_Name)" + "VALUES ('" + teamName + "');";
+		
+		teamSqlStatements.add(insert);
 		SQLDatabase.executeDDL(sql);
 		
 	}
-	
+	**/
 	public static void addGamesToTable(Game... gameArray) throws SQLException{
 		
-		String homeTeam, awayTeam, startTime, endTime, url, date;
-		int attendance, gameNumber, homeGoals, awayGoals;
+		String startTime, endTime, url, date;
+		int attendance, gameNumber, homeGoals, awayGoals, homeID, awayID;
+		Map<String, Integer> teams = Teams.teamMap;
 
+		
 		for (Game g: gameArray){
 			
 			gameNumber = g.getGameNumber();
-			homeTeam = g.getHomeTeam();
-			awayTeam = g.getAwayTeam();
+			homeID = teams.get(g.getHomeTeam());
+			awayID = teams.get(g.getAwayTeam());
 			startTime = formatTime(g.getStartTime());
 			endTime = formatTime(g.getEndTime());
 			url = g.getUrl();
@@ -145,12 +184,77 @@ public class HockeyJDBC {
 			homeGoals = Integer.parseInt(g.getHomeGoals());
 			awayGoals = Integer.parseInt(g.getAwayGoals());
 			
-			String GameAdd = "REPLACE INTO Games_T(Home_Team, Home_Goals, Away_Team, Away_Goals, Start_Time, End_Time, Game_URL, Game_Attendance, Game_Number, Game_Date)" + 
-			"VALUES ('" + homeTeam + "', '" + homeGoals + "', '" + awayTeam + "', '" + awayGoals + "', '" + startTime + "', '" + endTime + "', '" + url + "', '" + attendance + "', '" + gameNumber + "', '" + date +"');";
 			
+			String GameAdd = "REPLACE INTO Game_T(Home_Team_ID, Home_Goals, Away_Team_ID, Away_Goals, Start_Time, End_Time, Game_URL, Game_Attendance, Game_Number, Game_Date)" + 
+			"VALUES ('" + homeID + "', '" + homeGoals + "', '" + awayID + "', '" + awayGoals + "', '" + startTime + "', '" + endTime + "', '" + url + "', '" + attendance + "', '" + gameNumber + "', '" + date +"');";
+			
+			String insert = "INSERT INTO Game_T(Home_Team_ID, Home_Goals, Away_Team_ID, Away_Goals, Start_Time, End_Time, Game_URL, Game_Attendance, Game_Number, Game_Date)" + 
+					"VALUES ('" + homeID + "', '" + homeGoals + "', '" + awayID + "', '" + awayGoals + "', '" + startTime + "', '" + endTime + "', '" + url + "', '" + attendance + "', '" + gameNumber + "', '" + date +"');";
+			
+			gameSqlStatements.add(insert);
 			SQLDatabase.executeDDL(GameAdd);
 		
 		}
+		
+		
+	}
+	
+	public static void addEventsToTable(Game... gameArray) throws SQLException{
+		
+		int gameNumber;
+		int eventNumber;
+		int period;
+		String strength;
+		String periodTime;
+		//String periodTimeLeft;
+		String event;
+		//String description;
+		//Map<Integer, Character> homePlayersOnIce;
+		//Map<Integer, Character> awayPlayersOnIce;
+		Map<Integer, Event> eventMap;
+		Event e = new Event();
+		
+		for (Game g: gameArray){
+			
+			eventMap = g.getEventMap();
+			
+			gameNumber = g.getGameNumber();
+			
+			for (Map.Entry<Integer, Event> eventObj : eventMap.entrySet()){
+			    e = eventObj.getValue();
+			    
+				eventNumber = e.getEventNumber();
+				period = e.getPeriod();
+				strength = e.getStrength();
+				periodTime = e.getPeriodTime();
+				event = e.getEvent();
+				//description = e.getDescription();
+				
+				
+				String eventAdd = "REPLACE INTO Event_T(Game_ID, Event_ID, Event_Type_Abbr, Period, Strength_Abbr, Time_Elapsed)" +
+								"VALUES ('" + gameNumber + "', '" + eventNumber + "', '" + event + "', '" + period + "', '" + strength + "', '" + periodTime +"');";
+				
+				String insert = "INSERT INTO Event_T(Game_ID, Event_ID, Event_Type_Abbr, Period, Strength_Abbr, Time_Elapsed)" +
+						"VALUES ('" + gameNumber + "', '" + eventNumber + "', '" + event + "', '" + period + "', '" + strength + "', '" + periodTime +"');";
+									
+				eventSqlStatements.add(insert);
+				SQLDatabase.executeDDL(eventAdd);
+			
+			}
+			
+			
+			
+			
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
 		
 	}
 	
