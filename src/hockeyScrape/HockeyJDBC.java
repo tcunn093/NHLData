@@ -43,16 +43,19 @@ public class HockeyJDBC {
 		System.out.println(url);
 		
 		Game game = null;
-
-		while (badURLCounter > 0){
+		System.out.println(gameNumber);
+		while ((badURLCounter > 0 ) && gameNumber < 20020){
 			
 			System.out.println("Bad URL Counter: " + badURLCounter);
 			
 			try{
-
+				
+			
 			game = new Game(url);
 			
+			addEventsToTable(game);
 			addGamesToTable(game);
+			
 			//addToTeamsTable(game);
 			
 			} catch (IOException e){
@@ -121,6 +124,8 @@ public class HockeyJDBC {
 			
 		}
 		
+		out.close();
+		
 	}
 	
 	public static String formatTime(String t){
@@ -164,7 +169,7 @@ public class HockeyJDBC {
 		
 	}
 	**/
-	public static void addGamesToTable(Game... gameArray) throws SQLException{
+	private void addGamesToTable(Game... gameArray) throws SQLException{
 		
 		String startTime, endTime, url, date;
 		int attendance, gameNumber, homeGoals, awayGoals, homeID, awayID;
@@ -199,7 +204,7 @@ public class HockeyJDBC {
 		
 	}
 	
-	public static void addEventsToTable(Game... gameArray) throws SQLException{
+	private void addEventsToTable(Game... gameArray) throws SQLException{
 		
 		int gameNumber;
 		int eventNumber;
@@ -212,7 +217,11 @@ public class HockeyJDBC {
 		//Map<Integer, Character> homePlayersOnIce;
 		//Map<Integer, Character> awayPlayersOnIce;
 		Map<Integer, Event> eventMap;
-		Event e = new Event();
+		
+		String insert;
+		String strengthFix;
+		
+		Event e;
 		
 		for (Game g: gameArray){
 			
@@ -221,31 +230,40 @@ public class HockeyJDBC {
 			gameNumber = g.getGameNumber();
 			
 			for (Map.Entry<Integer, Event> eventObj : eventMap.entrySet()){
-			    e = eventObj.getValue();
-			    
+
+				e = eventObj.getValue();
+
 				eventNumber = e.getEventNumber();
 				period = e.getPeriod();
-				strength = e.getStrength();
+				
+				if (e.getStrength().length() > 1){
+					
+					strengthFix = "'" + e.getStrength() + "'";
+					
+				} else{
+					strengthFix = null;
+				}
+				
+				
+				
+
 				periodTime = e.getPeriodTime();
 				event = e.getEvent();
 				//description = e.getDescription();
 				
 				
 				String eventAdd = "REPLACE INTO Event_T(Game_ID, Event_ID, Event_Type_Abbr, Period, Strength_Abbr, Time_Elapsed)" +
-								"VALUES ('" + gameNumber + "', '" + eventNumber + "', '" + event + "', '" + period + "', '" + strength + "', '" + periodTime +"');";
-				
-				String insert = "INSERT INTO Event_T(Game_ID, Event_ID, Event_Type_Abbr, Period, Strength_Abbr, Time_Elapsed)" +
-						"VALUES ('" + gameNumber + "', '" + eventNumber + "', '" + event + "', '" + period + "', '" + strength + "', '" + periodTime +"');";
-									
+								"VALUES ('" + gameNumber + "', '" + eventNumber + "', '" + event + "', '" + period + "', " + strengthFix + ", '" + periodTime +"');";
+
+				insert = "INSERT INTO Event_T(Game_ID, Event_ID, Event_Type_Abbr, Period, Strength_Abbr, Time_Elapsed)" +
+						"VALUES ('" + gameNumber + "', '" + eventNumber + "', '" + event + "', '" + period + "', " + strengthFix + ", '" + periodTime +"');";
+		
 				eventSqlStatements.add(insert);
-				SQLDatabase.executeDDL(eventAdd);
+
+				//SQLDatabase.executeDDL(eventAdd);
 			
 			}
-			
-			
-			
-			
-			
+	
 		}
 		
 		

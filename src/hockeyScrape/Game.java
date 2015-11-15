@@ -140,7 +140,7 @@ public class Game {
 		
 	}
 	
-	private static Event addToEvent(Event e, String data, int counter){
+	private static void addToEvent(Event e, String data, int counter){
 		
 		String newData;
 		int numWords;
@@ -213,7 +213,6 @@ public class Game {
 		
 		}
 		
-		return e;
 		
 	}
 	
@@ -318,22 +317,25 @@ public class Game {
 			
 			for (Element d: data){
 				
+				//Save event to Map on counter reset (multiple of 8)
 				if (counter%8 == 0 && counter != 0){
 					
 					eventMap.put((counter)/8, event);
 					
+					event = new Event();
+					
 				}
 				
-				event = addToEvent(event, d.text(), counter);
+				//Add a data entry to the event
+				addToEvent(event, d.text(), counter);
 				
 				counter++;
 				
 			}
 			
-			eventMap.put((counter)/8, event);	
+			//eventMap.put((counter)/8, event);	
 			
 		}
-		
 		
 	}
 	

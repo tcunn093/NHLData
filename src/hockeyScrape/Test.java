@@ -62,9 +62,19 @@ public static void printGMap(Map<Integer, Event> mapToPrint){
 		double startTime = System.currentTimeMillis();
 
 		//System.out.println(HockeyJDBC.formatTime("7:11"));
+		/**
+		Game g = new Game("http://www.nhl.com/scores/htmlreports/20152016/PL020008.HTM");
 		
+		for(Map.Entry<Integer, Event> me: g.getEventMap().entrySet()){
+			
+			System.out.printf("\n Key: %s, Value: %s\n", me.getKey(), me.getValue().getEvent());
+			
+		}
+		
+		g.getEventMap().entrySet();
+		**/
 		HockeyJDBC h = new HockeyJDBC();
-		h.addSeason("20142015");
+		h.addSeason("20152016");
 		h.printStatements();
 		h.exit();
 		//printGame(g);
