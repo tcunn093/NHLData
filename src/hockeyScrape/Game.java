@@ -1,8 +1,9 @@
 package hockeyScrape;
 
 import java.io.IOException;
-
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jsoup.Jsoup;
@@ -106,14 +107,14 @@ public class Game {
 		return url;
 	}
 	
-	
-	private static Map<Integer, Character> onIcePlayers(String dataLine){
+	/**
+	private static Map<Character, Player> onIcePlayers(String dataLine){
 		
 		int playerNumber;
 		char playerPosition;
 		String stringPlayerNumber;
 		
-		Map<Integer, Character> onIceMap = new HashMap<Integer, Character>();
+		Map<Character, Player> onIceMap = new HashMap<Character, Player>();
 
 		int numberOfPlayers = StringParsing.numberOfWords(dataLine) / 2;	
 
@@ -132,6 +133,7 @@ public class Game {
 			
 			
 		}
+		**/
 
 	public int numberOfEvents(){
 		
@@ -140,75 +142,95 @@ public class Game {
 		
 	}
 	
-	private static void addToEvent(Event e, String data, int counter){
+	private static void addToEvent(Event e, Element data, int counter){
 		
 		String newData;
 		int numWords;
+		Elements player;
+		List<Player> playerList;
+		String name, position;
+		int number, c;
+		String line;
 		
 		switch (counter%8){
 		
 		case 0:
 			
-			e.setEventNumber(Integer.parseInt(data));
+			e.setEventNumber(Integer.parseInt(data.text()));
 			
 			break;
 			
 		case 1:
 			
-			e.setPeriod(Integer.parseInt(data));
+			e.setPeriod(Integer.parseInt(data.text()));
 			
 			break;
 			
 		case 2: 
 			
-			e.setStrength(data);
+			e.setStrength(data.text());
 			
 			break;
 			
 		case 3:
 			
-			newData = StringParsing.getNthWord(1, data);
+			newData = StringParsing.getNthWord(1, data.text());
 			e.setPeriodTime(newData);
 			
-			newData = StringParsing.getNthWord(2, data);
-			e.setPeriodTimeLeft(data);
+			newData = StringParsing.getNthWord(2, data.text());
+			e.setPeriodTimeLeft(data.text());
 			
 			break;
 			
 		case 4:
 			
-			e.setEvent(data);
+			e.setEvent(data.text());
 			
 			break;
 			
 		case 5:
 			
-			e.setDescription(data);
+			e.setDescription(data.text());
 			
 			break;
 			
 		case 6:
 			
-			numWords = StringParsing.numberOfWords(data);
-			//Each onIce data line will return at least 6 words (ie. Strings surrounded by spaces or min/max index). If it's less,
-			//then it's a non-standard line to be ignored.
-			if (counter != 6 && numWords >= 6){
-				
-				e.putAwayPlayersOnIce(onIcePlayers(data));
-				
+			player = data.select("font");
+			playerList = new ArrayList<Player>();
+			
+			c = 1;
+			for (Element pl: player){
+				line = pl.attr("title");
+				number = Integer.parseInt(StringParsing.getNthWord(c, data.text()));
+				c+=2;
+				name = StringParsing.getNWords(StringParsing.numberOfWords(line)-1, StringParsing.numberOfWords(line), line);
+				position = StringParsing.getNWords(1, StringParsing.getWordNumber("-", line) - 1, line);
+				//System.out.printf("Player: %s\n Number: %d\n Position: %s\n", name, number, position);
+				playerList.add(new Player(name, number, position));
 			}
 			
+			
+			e.setHomePlayersOnIce(playerList);
 			break;
 			
+			
 		case 7:
+			player = data.select("font");
+			playerList = new ArrayList<Player>();
 			
-			numWords = StringParsing.numberOfWords(data);
-			
-			if (counter != 7 && numWords >= 6){
-				
-				e.putHomePlayersOnIce(onIcePlayers(data));
+			c = 1;
+			for (Element pl: player){
+				line = pl.attr("title");
+				number = Integer.parseInt(StringParsing.getNthWord(c, data.text()));
+				c+=2;
+				name = StringParsing.getNWords(StringParsing.numberOfWords(line)-1, StringParsing.numberOfWords(line), line);
+				position = StringParsing.getNWords(1, StringParsing.getWordNumber("-", line) - 1, line);
+				//System.out.printf("Player: %s\n Number: %d\n Position: %s\n", name, number, position);
+				playerList.add(new Player(name, number, position));
 			}
 			
+			e.setAwayPlayersOnIce(playerList);
 			break;
 		
 		}
@@ -303,6 +325,8 @@ public class Game {
 		
 	}
 	
+	
+	
 	private void setEvents(){
 		
 		event = new Event();
@@ -313,7 +337,13 @@ public class Game {
 		
 		for (Element e: dataLines){
 			
-			Elements data = e.select("td[class$= + bborder], td[class$= + bborder + rborder] ");
+			Elements data = e.select("td[class$= + bborder], td[class$= + bborder + rborder]");
+			
+			Elements homePlayers = e.select("td[class$= + bborder + rborder]");
+			
+			Elements awayPlayers = e.select("td[class$= + bborder + rborder] + td[class$= + bborder]");
+			
+			Elements player;
 			
 			for (Element d: data){
 				
@@ -325,13 +355,18 @@ public class Game {
 					event = new Event();
 					
 				}
-				
+			
 				//Add a data entry to the event
-				addToEvent(event, d.text(), counter);
+				addToEvent(event, d, counter);
+				
 				
 				counter++;
 				
 			}
+			
+			
+		
+			
 			
 			//eventMap.put((counter)/8, event);	
 			

@@ -40,6 +40,33 @@ package hockeyScrape;
 		
 	}
 	
+	public static int getWordNumber(String word, String input){
+		
+		
+		boolean wordFound;
+		
+		int counter = 1;
+		int wordCount = numberOfWords(input);
+		
+		
+		do {
+			
+			wordFound = word.equals(getNthWord(counter, input));
+			counter++;
+			
+			
+			
+		} while (wordFound = false && counter < wordCount);
+		
+		if (counter == wordCount){
+			
+			System.out.println("WORD NOT FOUND");
+			counter=0;
+		}
+		
+		return counter;
+	}
+	
 	public static String getNthWord(int n, String input){
 			
 			int counter = 0;

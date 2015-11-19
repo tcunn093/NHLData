@@ -1,6 +1,8 @@
 package hockeyScrape;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Event {
@@ -12,8 +14,8 @@ public class Event {
 	private String periodTimeLeft;
 	private String event;
 	private String description;
-	private Map<Integer, Character> homePlayersOnIce;
-	private Map<Integer, Character> awayPlayersOnIce;
+	private List<Player> homePlayersOnIce;
+	private List<Player> awayPlayersOnIce;
 	
 	
 	public Event(){
@@ -25,35 +27,32 @@ public class Event {
 		periodTimeLeft = "";
 		event = "";
 		description = "";
-		homePlayersOnIce = new HashMap<Integer, Character>();
-		awayPlayersOnIce = new HashMap<Integer, Character>();
+		homePlayersOnIce = new ArrayList<Player>();
+		awayPlayersOnIce = new ArrayList<Player>();
 		
 	}
+
 	
-	public void putHomePlayersOnIce(Map<Integer, Character> onIceMap){
-		
-		homePlayersOnIce = onIceMap;
-		
-	}
-	
-	public void putAwayPlayersOnIce(Map<Integer, Character> onIceMap){
-		
-		awayPlayersOnIce = onIceMap;
-		
-	}
-	
-	public Map<Integer, Character> getHomePlayersOnIce(){
+	public List<Player> getHomePlayersOnIce(){
 		
 		return homePlayersOnIce;
 		
 	}
 	
-	public Map<Integer, Character> getAwayPlayersOnIce(){
+	public List<Player> getAwayPlayersOnIce(){
 		
 		return awayPlayersOnIce;
 		
 	}
 	
+	public void setHomePlayersOnIce(List<Player> homePlayersOnIce) {
+		this.homePlayersOnIce = homePlayersOnIce;
+	}
+
+	public void setAwayPlayersOnIce(List<Player> awayPlayersOnIce) {
+		this.awayPlayersOnIce = awayPlayersOnIce;
+	}
+
 	public void setEventNumber(int eventNumber){
 		
 		this.eventNumber = eventNumber;
